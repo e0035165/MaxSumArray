@@ -6,23 +6,43 @@
 //
 
 #include <iostream>
-#include <vector>
-#include <sstream>
-#include <fstream>
+#include <string>
+#include<algorithm>
+#include<functional>
+#include<fstream>
+#include<vector>
+#include <set>
+#include <queue>
+#include<map>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 string ltrim(const string &str);
 string rtrim(const string &str);
 vector<string> split(const string &str);
 long maximumSum(vector<long>a, long m);
+int CeilIndex(int* v, int l, int r, int key);
 
+int CeilIndex(int* v, int l, int r, int key)
+{
+    while (r - l > 1) {
+        int m = l + (r - l) / 2;
+        if (v[m] >= key)
+            r = m;
+        else
+            l = m;
+    }
+
+    return r;
+}
 
 
 
 
 int main(int argc, const char * argv[]) {
     
-    ofstream fout(getenv("OUTPUT_PATH"));
+    fstream input("File.txt", ios::in | ios::out);
 
     string q_temp;
     getline(cin, q_temp);
@@ -57,7 +77,7 @@ int main(int argc, const char * argv[]) {
         cout << result << "\n";
     }
 
-    fout.close();
+    input.close();
 
     return 0;
 }
@@ -75,6 +95,30 @@ long maximumSum(vector<long> a, long m) {
         sum[itr] = (sum[itr]%m);
         ++itr;
     }
+    long max = LONG_MIN;
+    long min = LONG_MAX;
+    long ans = 0;
+    long ans_two = 0;
+    vector<long>lister;
+    vector<vector<long>>horizontal_lister;
+    lister.push_back(sum[0]);
+    vector<long>buffer;
+    horizontal_lister.push_back(buffer);
+    for(int i=1;i<sum.size();++i)
+    {
+        if(lister[lister.size() - 1] < sum[i])
+        {
+            vector<long>buffer;
+            horizontal_lister.push_back(buffer);
+            lister.push_back(sum[i]);
+        } else {
+            
+        }
+    }
+    
+    
+    
+    
     
     return 0;
 }
