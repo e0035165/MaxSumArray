@@ -22,7 +22,8 @@ string ltrim(const string &str);
 string rtrim(const string &str);
 vector<string> split(const string &str);
 long maximumSum(vector<long>a, long m);
-
+static long maxans = LONG_MIN;
+static long mod = 0;
 
 
 struct Node
@@ -31,6 +32,8 @@ struct Node
     Node* left = NULL;
     Node* right = NULL;
     vector<Node*>copies;
+    Node* smallnear = NULL;
+    Node* bignear = NULL;
     int height = 0;
     Node(long data)
     {
@@ -99,10 +102,21 @@ int getNodeBalanceFactor(Node* left, Node* right)
 }
 
 
-Node* insertNode(Node* newone, Node* currentOne)
+Node* insertNode(Node* newone, Node* currentOne, Node* smallerOne, Node* biggerOne)
 {
     if(currentOne == NULL)
     {
+        if((mod - (newone->data - smallerOne->data)) > maxans)
+        {
+            maxans = (mod - (newone->data - smallerOne->data));
+        }
+        
+        if((mod - (biggerOne->data - newone->data)) > maxans)
+        {
+            maxans = (mod - (biggerOne->data - newone->data));
+        }
+        
+        
         return newone;
     }
     
@@ -111,16 +125,37 @@ Node* insertNode(Node* newone, Node* currentOne)
         if(newone->data < currentOne->data)
         {
             //cout << "left " << currentOne->data << endl;
-            currentOne->left = insertNode(newone, currentOne->left);
+            currentOne->left = insertNode(newone, currentOne->left, smallerOne, currentOne);
         } else {
             //cout << "right " << currentOne->data << endl;
-            currentOne->right = insertNode(newone, currentOne->right);
+            currentOne->right = insertNode(newone, currentOne->right, currentOne, biggerOne);
         }
     } else {
         
     }
     
     return currentOne;
+}
+
+
+Node* getMaxfromNode(Node* temp)
+{
+    while(temp->right != nullptr)
+    {
+        temp = temp->right;
+    }
+    
+    return temp;
+}
+
+
+Node* getMinfromNode(Node* temo)
+{
+    while(temo->left != nullptr)
+    {
+        temo = temo->left;
+    }
+    return temo;
 }
 
 
@@ -157,7 +192,7 @@ int main(int argc, const char * argv[]) {
         }
 
         long result = maximumSum(a, m);
-
+        cout << result << endl;
         //cout << result << "\n";
     }
 
@@ -170,29 +205,43 @@ int main(int argc, const char * argv[]) {
 
 
 long maximumSum(vector<long> a, long m) {
-    vector<long>sum((int)a.size());
-    sum[0] = a[0];
+    vector<long>sum_forward((int)a.size());
+    sum_forward[0] = a[0]%m;
+    vector<long>sum_backward((int)a.size());
+    sum_backward[0] = a[(int)a.size() - 1]%m;
     int itr = 1;
+    int SIZE = (int)a.size();
+    long max = LONG_MIN;
     for(auto x=a.begin()+1;x!=a.end();++x)
     {
-        sum[itr] = (*x) + sum[itr-1];
-        sum[itr] = (sum[itr]%m);
+        long remainder = (((*x)%m) + sum_forward[itr-1])%m;
+        sum_forward[itr] = remainder;
         ++itr;
     }
-    long max = LONG_MIN;
-    long min = LONG_MAX;
-    
-    Node* start = new Node(sum[0]);
-
-    int i = 0;
-    while(++i < sum.size())
+    mod = m;
+    Node* start = new Node(sum_forward[0]);
+    bool loon = false;
+    for(int i=0;i<SIZE;++i)
     {
-        start = insertNode(new Node(sum[i]), start);
+        if(i!=0)
+        {
+            start = insertNode(new Node(sum_forward[i]), start, start, start);
+            loon = true;
+        }
+        if(sum_forward[i] > maxans)
+        {
+            maxans = sum_forward[i];
+            loon = false;
+        }
     }
     
-    printNodal(start);
-    cout << endl;
-    cout << endl;
+    cout << maxans << endl;
+    cout << loon << endl;
+    maxans = 0;
+    
+    
+
+    
     
     return 0;
 }
