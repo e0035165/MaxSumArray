@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B83D324429E5341600D13EB3 /* NaiveSolution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B83D324229E5341600D13EB3 /* NaiveSolution.cpp */; };
 		B83E997E29A085A4002F1AE2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B83E997D29A085A4002F1AE2 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B83D324229E5341600D13EB3 /* NaiveSolution.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NaiveSolution.cpp; sourceTree = "<group>"; };
+		B83D324329E5341600D13EB3 /* NaiveSolution.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NaiveSolution.hpp; sourceTree = "<group>"; };
 		B83E997A29A085A4002F1AE2 /* PlaneProblem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PlaneProblem; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83E997D29A085A4002F1AE2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B86DA1E929BCE18900C12717 /* File.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = File.txt; sourceTree = "<group>"; };
@@ -60,6 +63,8 @@
 			children = (
 				B83E997D29A085A4002F1AE2 /* main.cpp */,
 				B86DA1E929BCE18900C12717 /* File.txt */,
+				B83D324229E5341600D13EB3 /* NaiveSolution.cpp */,
+				B83D324329E5341600D13EB3 /* NaiveSolution.hpp */,
 			);
 			path = PlaneProblem;
 			sourceTree = "<group>";
@@ -91,7 +96,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					B83E997929A085A4002F1AE2 = {
 						CreatedOnToolsVersion = 14.2;
@@ -121,6 +126,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B83D324429E5341600D13EB3 /* NaiveSolution.cpp in Sources */,
 				B83E997E29A085A4002F1AE2 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -161,6 +167,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -219,6 +226,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -241,6 +249,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -249,6 +258,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

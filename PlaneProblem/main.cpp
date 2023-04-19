@@ -16,13 +16,14 @@
 #include<map>
 #include <chrono>
 #include <thread>
+#include "NaiveSolution.hpp"
 
 using namespace std;
 string ltrim(const string &str);
 string rtrim(const string &str);
 vector<string> split(const string &str);
 long maximumSum(vector<long>a, long m);
-static long maxans = LONG_MIN;
+static long maxans = 0;
 static long mod = 0;
 
 
@@ -32,27 +33,38 @@ struct Node
     Node* left = NULL;
     Node* right = NULL;
     vector<Node*>copies;
-    Node* smallnear = NULL;
-    Node* bignear = NULL;
     int height = 0;
+    int index = -1;
     Node(long data)
     {
         this->data = data;
         this->height = 1;
     }
     
+    Node(long data, int index)
+    {
+        this->data = data;
+        this->height = 1;
+        this->index = index;
+    }
+    
 
 };
 
-void printNodal(Node* curr);
-bool sameNodeCheck(Node* newone, Node* currentOne);
+Node* MAX = new Node(LONG_MAX);
+Node* MIN = new Node(LONG_MIN);
+
+void printNodal(Node* curr, vector<Node*>&vect);
+bool sameNodeCheck(Node* newone, Node* currentOne, Node* smallerOne, Node* biggerOne);
 void setHeight(Node* curr);
 int getNodeBalanceFactor(Node* left, Node* right);
 
-bool sameNodeCheck(Node* newone, Node* currentOne)
+bool sameNodeCheck(Node* newone, Node* currentOne, Node* smallerOne, Node* biggerOne)
 {
     if(newone->data == currentOne->data)
     {
+        long temp = maxans;
+        int changed_index = newone->index;
         currentOne->copies.push_back(newone);
         return true;
     } else {
@@ -60,17 +72,17 @@ bool sameNodeCheck(Node* newone, Node* currentOne)
     }
 }
 
-void printNodal(Node* curr)
+void printNodal(Node* curr, vector<Node*>&vect)
 {
     if (curr == nullptr)
     {
         return;
     }
-    printNodal(curr->left);
+    printNodal(curr->left,vect);
 
-    cout << curr->data << " ";
+    vect.push_back(curr);
 
-    printNodal(curr->right);
+    printNodal(curr->right,vect);
 
     return;
 }
@@ -106,28 +118,16 @@ Node* insertNode(Node* newone, Node* currentOne, Node* smallerOne, Node* biggerO
 {
     if(currentOne == NULL)
     {
-        if((mod - (newone->data - smallerOne->data)) > maxans)
-        {
-            maxans = (mod - (newone->data - smallerOne->data));
-        }
-        
-        if((mod - (biggerOne->data - newone->data)) > maxans)
-        {
-            maxans = (mod - (biggerOne->data - newone->data));
-        }
-        
-        
+
         return newone;
     }
     
-    if(!sameNodeCheck(newone, currentOne))
+    if(!sameNodeCheck(newone, currentOne, smallerOne, biggerOne))
     {
         if(newone->data < currentOne->data)
         {
-            //cout << "left " << currentOne->data << endl;
             currentOne->left = insertNode(newone, currentOne->left, smallerOne, currentOne);
         } else {
-            //cout << "right " << currentOne->data << endl;
             currentOne->right = insertNode(newone, currentOne->right, currentOne, biggerOne);
         }
     } else {
@@ -190,10 +190,10 @@ int main(int argc, const char * argv[]) {
 
             a[i] = a_item;
         }
-
+        mod = m;
         long result = maximumSum(a, m);
         cout << result << endl;
-        //cout << result << "\n";
+        maxans = 0;
     }
 
     input.close();
@@ -207,43 +207,53 @@ int main(int argc, const char * argv[]) {
 long maximumSum(vector<long> a, long m) {
     vector<long>sum_forward((int)a.size());
     sum_forward[0] = a[0]%m;
-    vector<long>sum_backward((int)a.size());
-    sum_backward[0] = a[(int)a.size() - 1]%m;
-    int itr = 1;
-    int SIZE = (int)a.size();
-    long max = LONG_MIN;
-    for(auto x=a.begin()+1;x!=a.end();++x)
+    
+    int i = 0;
+    while(++i<(int)a.size())
     {
-        long remainder = (((*x)%m) + sum_forward[itr-1])%m;
-        sum_forward[itr] = remainder;
-        ++itr;
-    }
-    mod = m;
-    Node* start = new Node(sum_forward[0]);
-    bool loon = false;
-    for(int i=0;i<SIZE;++i)
-    {
-        if(i!=0)
-        {
-            start = insertNode(new Node(sum_forward[i]), start, start, start);
-            loon = true;
-        }
-        if(sum_forward[i] > maxans)
-        {
-            maxans = sum_forward[i];
-            loon = false;
-        }
+        sum_forward[i] = ((sum_forward[i-1]%m) + (a[i]%m))%m;
     }
     
-    cout << maxans << endl;
-    cout << loon << endl;
-    maxans = 0;
-    
-    
-
-    
-    
-    return 0;
+    NaiveSolution* soln = new NaiveSolution();
+    return soln->getLargestModSequence(sum_forward, m);
+//    for(int i=0;i<(int)a.size();++i)
+//    {
+//        cout << sum_forward[i] << " ";
+//    }
+//    cout << endl;
+//    //maxans = 0;
+//    Node* start = new Node(sum_forward[0],0);
+//    Node* max = new Node(LONG_MAX);
+//    Node* min = new Node(LONG_MIN);
+//    for(int i=0;i<a.size();++i)
+//    {
+//
+//        Node* temp = new Node(sum_forward[i],i);
+//        start = insertNode(temp, start, min, max);
+//
+//    }
+//    vector<Node*>nextone;
+//    printNodal(start, nextone);
+//
+//    for(int i=0;i<nextone.size()-1;++i)
+//    {
+//        if(nextone[i+1]->index > nextone[i]->index)
+//        {
+//            long lte = m - (nextone[i+1]->data - nextone[i]->data);
+//            if(lte > maxans)
+//            {
+//                cout << " Change in maxans " << nextone[i+1]->index << " value " << nextone[i]->index << " " << nextone[i+1]->data << " " << nextone[i]->data << endl;
+//                //lte << endl;
+//                maxans = lte;
+//            }
+//        }
+//    }
+    //cout << endl;
+//    
+//
+//
+//
+//    return maxans;
 }
 
 
