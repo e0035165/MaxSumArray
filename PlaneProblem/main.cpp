@@ -79,7 +79,7 @@ void printNodal(Node* curr, vector<Node*>&vect)
         return;
     }
     printNodal(curr->left,vect);
-
+    //cout << curr->index << " ";
     vect.push_back(curr);
 
     printNodal(curr->right,vect);
@@ -215,45 +215,55 @@ long maximumSum(vector<long> a, long m) {
     }
     
     NaiveSolution* soln = new NaiveSolution();
-    return soln->getLargestModSequence(sum_forward, m);
+    //pair<long,pair<int,int>>thisiscrazy;
+    //thisiscrazy = soln->getLargestModSequences(sum_forward, m);
+    
 //    for(int i=0;i<(int)a.size();++i)
 //    {
 //        cout << sum_forward[i] << " ";
 //    }
 //    cout << endl;
-//    //maxans = 0;
-//    Node* start = new Node(sum_forward[0],0);
-//    Node* max = new Node(LONG_MAX);
-//    Node* min = new Node(LONG_MIN);
-//    for(int i=0;i<a.size();++i)
-//    {
-//
-//        Node* temp = new Node(sum_forward[i],i);
-//        start = insertNode(temp, start, min, max);
-//
-//    }
-//    vector<Node*>nextone;
-//    printNodal(start, nextone);
-//
-//    for(int i=0;i<nextone.size()-1;++i)
-//    {
-//        if(nextone[i+1]->index > nextone[i]->index)
-//        {
-//            long lte = m - (nextone[i+1]->data - nextone[i]->data);
-//            if(lte > maxans)
-//            {
-//                cout << " Change in maxans " << nextone[i+1]->index << " value " << nextone[i]->index << " " << nextone[i+1]->data << " " << nextone[i]->data << endl;
-//                //lte << endl;
-//                maxans = lte;
-//            }
-//        }
-//    }
+    //maxans = 0;
+    Node* start = new Node(sum_forward[0],0);
+    Node* max = new Node(LONG_MAX);
+    Node* min = new Node(LONG_MIN);
+    for(int i=1;i<a.size();++i)
+    {
+
+        Node* temp = new Node(sum_forward[i],i);
+        start = insertNode(temp, start, min, max);
+
+    }
+    vector<Node*>nextone;
+    printNodal(start, nextone);
     //cout << endl;
+    int ptone = -1;
+    int ptTwo = 0;
+    for(int i=0;i<nextone.size()-1;++i)
+    {
+        //long lte = m - (nextone[i+1]->data - nextone[i]->data);
+        long lte = 0;
+        if(nextone[i+1]->index > nextone[i]->index)
+        {
+            lte = nextone[i+1]->data - nextone[i]->data;
+        } else {
+            lte = m - (nextone[i+1]->data - nextone[i]->data);
+        }
+        if(lte > maxans)
+        {
+            ptone = nextone[i]->index;
+            ptTwo = nextone[i+1]->index;
+            maxans = lte;
+        }
+    }
+    //cout << ptone << " " << ptTwo << " " << " answer 1: " << maxans << endl;
+    //cout << thisiscrazy.second.first << " " << thisiscrazy.second.second << " Answer 2: " << thisiscrazy.first << endl;
 //    
 //
 //
 //
 //    return maxans;
+    return maxans;
 }
 
 

@@ -50,6 +50,8 @@ public:
     long getLargestModSequence(vector<long>array, long mod)
     {
         int SIZE = array.size();
+        int pointOne = 0;
+        int pointTwo = 0;
         long** answer = new long*[SIZE + 1];
         for(int i=0;i<=SIZE;++i)
         {
@@ -107,6 +109,85 @@ public:
         
         //cout << maxans << endl;
         return maxans;
+    }
+    
+    pair<long,pair<int,int>> getLargestModSequences(vector<long>array, long od)
+    {
+        pair<long, pair<int,int>>answers;
+        int SIZE = (int)array.size();
+        int pointOne = -1;
+        int pointTwo = 0;
+        long** answer = new long*[SIZE + 1];
+        pair<int,int>**positron = new pair<int,int>*[SIZE+1];
+        for(int i=0;i<=SIZE;++i)
+        {
+            positron[i] = new pair<int,int>[SIZE+1];
+            answer[i] = new long[SIZE+1];
+        }
+        
+        for(int i=0;i<=SIZE;++i)
+        {
+            if(i==SIZE)
+            {
+                for(int j=0;j<=SIZE;++j)
+                {
+                    answer[i][j] = 0;
+                    positron[i][j] = pair<int,int>(-1,-1);
+                }
+            } else {
+                for(int j=0;j<SIZE;++j)
+                {
+                    if(j <= i)
+                    {
+                        answer[i][j] = 0;
+                        positron[i][j] = pair<int,int>(-1,-1);
+                    } else {
+                        answer[i][j] = -1;
+                        positron[i][j] = pair<int,int>(-1,-1);
+                    }
+                }
+                answer[i][SIZE] = 0;
+            }
+        }
+        
+//        for(int i=0;i<=SIZE;++i)
+//        {
+//            for(int j=0;j<=SIZE;++j)
+//            {
+//                cout << answer[i][j] << " ";
+//            }
+//            cout << endl;
+//        }
+        long maxans = LONG_MIN;
+        long secondMax = LONG_MIN;
+        for(int i=0;i<SIZE;++i)
+        {
+            for(int j=i+1;j<SIZE;++j)
+            {
+                long C = ((array[j] - array[i])+od)%od;
+                if(C > secondMax)
+                {
+                    secondMax = C;
+                    pointOne = i;
+                    pointTwo = j;
+                }
+                long CA = array[j];
+
+                C = CA > C ? CA : C;
+
+                long A = answer[i][j+1];
+                long B = answer[i+1][j];
+                answer[i][j] = A > B ? A > C ? A : C : B > C ? B : C;
+                if(answer[i][j] > maxans)
+                {
+                    maxans = answer[i][j];
+                }
+            }
+        }
+        
+        answers.first = maxans;
+        answers.second = pair<int,int>(pointOne,pointTwo);
+        return answers;
     }
     
 };
