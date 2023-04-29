@@ -23,6 +23,9 @@ string ltrim(const string &str);
 string rtrim(const string &str);
 vector<string> split(const string &str);
 long maximumSum(vector<long>a, long m);
+long newmaximumSum(vector<long> a, long m);
+void longer(pair<long,int>[], int, int);
+void merger(pair<long,int>[], int, int, int);
 static long maxans = 0;
 static long mod = 0;
 
@@ -53,7 +56,6 @@ struct Node
 
 Node* MAX = new Node(LONG_MAX);
 Node* MIN = new Node(LONG_MIN);
-
 void printNodal(Node* curr, vector<Node*>&vect);
 bool sameNodeCheck(Node* newone, Node* currentOne, Node* smallerOne, Node* biggerOne);
 void setHeight(Node* curr);
@@ -84,6 +86,69 @@ void printNodal(Node* curr, vector<Node*>&vect)
 
     printNodal(curr->right,vect);
 
+    return;
+}
+
+void longer(pair<long,int>arr[], int start, int end)
+{
+    if(start >= end)
+    {
+        return;
+    }
+    int mid = start + ((end - start) / 2);
+    longer(arr, start, mid);
+    longer(arr, mid + 1, end);
+    merger(arr, start, mid, end);
+}
+
+void merger(pair<long,int> arr[], int start, int mid, int end)
+{
+    pair<long,int>* leftarr_copy = new pair<long,int>[(mid - start) + 1];
+    pair<long,int>* rightarr_copy = new pair<long,int>[end - mid];
+    int right = 0;
+    int left = 0;
+
+    for (int x = start; x <= mid; x++) {
+        leftarr_copy[left] = arr[x];
+        left++;
+    }
+
+    for (int x = mid + 1; x <= end; x++) {
+        rightarr_copy[right] = arr[x];
+        right++;
+    }
+    
+    int right_ptr = 0;
+    int left_ptr = 0;
+    int x = start;
+    while (right_ptr < right && left_ptr < left) {
+        if (rightarr_copy[right_ptr].first < leftarr_copy[left_ptr].first) {
+            arr[x] = rightarr_copy[right_ptr];
+            right_ptr++;
+        }
+        else {
+            arr[x] = leftarr_copy[left_ptr];
+            left_ptr++;
+        }
+        x++;
+    }
+    if (left_ptr == left) {
+        while (right_ptr < right) {
+            arr[x] = rightarr_copy[right_ptr];
+            x++;
+            right_ptr++;
+        }
+    }
+    else {
+        while (left_ptr < left) {
+            arr[x] = leftarr_copy[left_ptr];
+            x++;
+            left_ptr++;
+        }
+    }
+
+    delete[] leftarr_copy;
+    delete[] rightarr_copy;
     return;
 }
 
@@ -162,16 +227,18 @@ Node* getMinfromNode(Node* temo)
 int main(int argc, const char * argv[]) {
     
     fstream input("File.txt", ios::in | ios::out);
-
+    fstream output("output.txt", ios::in);
     string q_temp;
     getline(input, q_temp);
 
     int q = stoi(ltrim(rtrim(q_temp)));
-    cout << q << endl;
+    //cout << q << endl;
     for (int q_itr = 0; q_itr < q; q_itr++) {
         string first_multiple_input_temp;
+        string rtemp;
         getline(input, first_multiple_input_temp);
-
+        getline(output, rtemp);
+        long r = stol(ltrim(rtrim(rtemp)));
         vector<string> first_multiple_input = split(rtrim(first_multiple_input_temp));
 
         int n = stoi(first_multiple_input[0]);
@@ -180,7 +247,7 @@ int main(int argc, const char * argv[]) {
 
         string a_temp_temp;
         getline(input, a_temp_temp);
-
+        
         vector<string> a_temp = split(rtrim(a_temp_temp));
 
         vector<long> a(n);
@@ -191,8 +258,13 @@ int main(int argc, const char * argv[]) {
             a[i] = a_item;
         }
         mod = m;
-        long result = maximumSum(a, m);
+        long result = newmaximumSum(a, m);
         cout << result << endl;
+        if(result != r)
+        {
+            cout << "Failure " << endl;
+            break;
+        }
         maxans = 0;
     }
 
@@ -202,9 +274,8 @@ int main(int argc, const char * argv[]) {
 }
 
 
-
-
 long maximumSum(vector<long> a, long m) {
+    //cout << m << endl;
     vector<long>sum_forward((int)a.size());
     sum_forward[0] = a[0]%m;
     
@@ -214,25 +285,23 @@ long maximumSum(vector<long> a, long m) {
         sum_forward[i] = ((sum_forward[i-1]%m) + (a[i]%m))%m;
     }
     
-    NaiveSolution* soln = new NaiveSolution();
-    //pair<long,pair<int,int>>thisiscrazy;
-    //thisiscrazy = soln->getLargestModSequences(sum_forward, m);
-    
-//    for(int i=0;i<(int)a.size();++i)
-//    {
-//        cout << sum_forward[i] << " ";
-//    }
-//    cout << endl;
-    //maxans = 0;
     Node* start = new Node(sum_forward[0],0);
+    if(start->data > maxans)
+    {
+        maxans = start->data;
+    }
     Node* max = new Node(LONG_MAX);
     Node* min = new Node(LONG_MIN);
     for(int i=1;i<a.size();++i)
     {
 
         Node* temp = new Node(sum_forward[i],i);
+        if(temp->data > maxans)
+        {
+            maxans = temp->data;
+        }
         start = insertNode(temp, start, min, max);
-
+        
     }
     vector<Node*>nextone;
     printNodal(start, nextone);
@@ -256,15 +325,56 @@ long maximumSum(vector<long> a, long m) {
             maxans = lte;
         }
     }
-    //cout << ptone << " " << ptTwo << " " << " answer 1: " << maxans << endl;
-    //cout << thisiscrazy.second.first << " " << thisiscrazy.second.second << " Answer 2: " << thisiscrazy.first << endl;
-//    
-//
-//
-//
-//    return maxans;
+    
     return maxans;
 }
+
+
+long newmaximumSum(vector<long> a, long m) {
+    //cout << m << endl;
+    vector<long>sum_forward((int)a.size());
+    sum_forward[0] = a[0]%m;
+    pair<long,int>* enigma = new pair<long,int>[(int)a.size()];
+    enigma[0].first = sum_forward[0];
+    enigma[0].second = 0;
+    int i = 0;
+    if(sum_forward[0] > maxans)
+    {
+        maxans = sum_forward[0];
+    }
+    while(++i<(int)a.size())
+    {
+        sum_forward[i] = ((sum_forward[i-1]%m) + (a[i]%m))%m;
+        if(sum_forward[i] > maxans)
+        {
+            maxans = sum_forward[i];
+        }
+        enigma[i].first = sum_forward[i];
+        enigma[i].second = i;
+    }
+    
+    longer(enigma,0,(int)(a.size()-1));
+    for(int i=0;i<a.size()-1;++i)
+    {
+        long lte = 0;
+        if(enigma[i+1].second > enigma[i].second)
+        {
+            lte = enigma[i+1].first - enigma[i].first;
+        } else {
+            lte = m - (enigma[i+1].first - enigma[i].first);
+        }
+        if(lte > maxans)
+        {
+            maxans = lte;
+        }
+    }
+    
+    
+    
+    
+    return maxans;
+}
+
 
 
 string ltrim(const string &str) {

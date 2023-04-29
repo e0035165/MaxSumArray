@@ -49,9 +49,7 @@ public:
     
     long getLargestModSequence(vector<long>array, long mod)
     {
-        int SIZE = array.size();
-        int pointOne = 0;
-        int pointTwo = 0;
+        int SIZE = (int)array.size();
         long** answer = new long*[SIZE + 1];
         for(int i=0;i<=SIZE;++i)
         {

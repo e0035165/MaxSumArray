@@ -24,6 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B81CBDEF29FB8D5800B0161F /* output.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = output.txt; sourceTree = "<group>"; };
 		B83D324229E5341600D13EB3 /* NaiveSolution.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NaiveSolution.cpp; sourceTree = "<group>"; };
 		B83D324329E5341600D13EB3 /* NaiveSolution.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NaiveSolution.hpp; sourceTree = "<group>"; };
 		B83E997A29A085A4002F1AE2 /* PlaneProblem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PlaneProblem; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +66,7 @@
 				B86DA1E929BCE18900C12717 /* File.txt */,
 				B83D324229E5341600D13EB3 /* NaiveSolution.cpp */,
 				B83D324329E5341600D13EB3 /* NaiveSolution.hpp */,
+				B81CBDEF29FB8D5800B0161F /* output.txt */,
 			);
 			path = PlaneProblem;
 			sourceTree = "<group>";
